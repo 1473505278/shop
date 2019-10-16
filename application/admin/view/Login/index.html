@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <title>后台登录</title>
+        <meta name="author" content="DeathGhost" />
+        {css href="/static/login/css/style.css" /}
+        <style>
+            body{height:100%;background:#16a085;overflow:hidden;}
+            canvas{z-index:-1;position:absolute;}
+        </style>
+        {js href="/static/login/js/jquery.js" /}
+        {js href="/static/login/js/verificationNumbers.js" /}
+        {js href="/static/login/js/Particleground.js" /}
+        {js href="/layer/layer.js" /}
+        <script>
+            $(document).ready(function() {
+                $('input[name=admin_name]').blur(function(){
+                    var admin_name=$(this).val().trim();
+                    if(admin_name==''){
+                        layer.tips('请输入账号',$(this));
+                    }
+                });
+                $('input[name=admin_pwd]').blur(function(){
+                    var admin_pwd=$(this).val().trim();
+                    if(admin_pwd==''){
+                        layer.tips('请输入密码',$(this));
+                    }
+                })
+                $('.submit_btn').click(function(){
+                    var admin_name=$('input[name=admin_name]').val();
+                    var admin_pwd=$('input[name=admin_pwd]').val();
+                    var save=$('input[name=save]').val();
+                    $.ajax({
+                        type:"post",
+                        url:"{:url('Login/login')}",
+                        data:{
+                            admin_name:admin_name,
+                            admin_pwd:admin_pwd,
+                            save:save
+                        },
+                        beforeSend:function(){
+                            layer.load(1);
+                        },
+                        dataType:"json",
+                        success:function(data){
+                            layer.closeAll('loading');
+                            if(data.status==0){
+                                window.location.href="{:url('Index/index')}"
+                            }
+                            if(data.status==1){
+                                alert(1);
+                                layer.msg('用户名错误');
+                            }
+                            if(data.status==2){
+                                layer.msg('密码错误');
+                            }
+                            if(data.status==3){
+                                layer.msg('账号异常');
+                            }
+                        }
+                    })
+                });
+                //粒子背景特效
+                $('body').particleground({
+                    dotColor: '#5cbdaa',
+                    lineColor: '#5cbdaa'
+                });
+                createCode();
+            });
+        </script>
+    </head>
+    <body>
+    <dl class="admin_login">
+        <dt>
+            <strong>站点后台管理系统</strong>
+            <em>Management System</em>
+        </dt>
+            <dd class="user_icon">
+                <input type="text" placeholder="账号" class="login_txtbx" name="admin_name"/>
+            </dd>
+            <dd class="pwd_icon">
+                <input type="password" placeholder="密码" class="login_txtbx" name="admin_pwd" />
+            </dd>
+            <!--<dd class="val_icon">-->
+                <!--<div class="checkcode">-->
+                    <!--<input type="text" placeholder="验证码" maxlength="4" class="login_txtbx" name="code">-->
+                <!--</div>-->
+                <!--<img style="margin-left:15px;" src="{:captcha_src()}" alt="captcha" onclick="this.src='{:captcha_src()}?'+Math.random()" />-->
+            <!--</dd>-->
+            <input type="checkbox" value="1" name="save" />七天免登陆
+            <dd>
+                <input type="button" value="立即登陆" class="submit_btn"/>
+            </dd>
+        <dd>
+            <p>© 2015-2016 DeathGhost 版权所有</p>
+            <p>陕B2-20080224-1</p>
+        </dd>
+    </dl>
+    </body>
+</html>

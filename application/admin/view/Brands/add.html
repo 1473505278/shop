@@ -1,0 +1,159 @@
+{extend name="public:head"}
+{block name="title"}
+    管理中心-添加品牌
+{/block}
+{block name="script"}
+{js href="/layer/layer.js" /}
+    <script>
+        $(document).ready(function(){
+            var validate={
+                brand_name:false,
+                brand_web:false,
+                brand_des:false,
+                brand_order:false
+            };
+            $("input[name=brand_name]").blur(function(){
+                var name=$(this).val().trim();
+                if(name==''){
+                    layer.tips('请输入品牌名',$(this));
+                    validate.brand_name=false;
+                }else {
+                    validate.brand_name=true;
+                }
+            });
+            $("input[name=brand_web]").blur(function(){
+                var web=$(this).val().trim();
+                if(web==''){
+                    layer.tips('请输入品牌网址',$(this));
+                    validate.brand_web=false;
+                }else {
+                    validate.brand_web=true;
+                }
+            });
+            $("input[name=brand_des]").blur(function(){
+                var des=$(this).val().trim();
+                if(des==''){
+                    layer.tips('请输入品牌简述',$(this));
+                    validate.brand_des=false;
+                }else {
+                    validate.brand_des=true;
+                }
+            });
+            $("input[name=brand_order]").blur(function(){
+                var order=$(this).val().trim();
+                if(order==''){
+                    layer.tips('请输入品牌排序',$(this));
+                    validate.brand_order=false;
+                }else {
+                    validate.brand_order=true;
+                }
+            })
+            $(".btn").click(function() {
+                if(validate.brand_des && validate.brand_name && validate.brand_order && validate.brand_web) {
+                    var file = $("input[name=brand_logo]").get(0).files[0];
+                    var brand_name = $("input[name=brand_name]").val();
+                    var brand_web = $("input[name=brand_web]").val();
+                    var brand_des = $("input[name=brand_des]").val();
+                    var brand_order = $("input[name=brand_order]").val();
+                    var brand_show = $("input[name=brand_show]").val();
+                    if (file.name == '') {
+                        layer.tips('请上传文件', $("input[name=brand_logo]"));
+                        validate.brand_logo = false;
+                        return false;
+                    }
+                    if (file.size > 2000000) {
+                        layer.tips('上传文件过大', $("input[name=brand_logo]"));
+                        validate.brand_logo = false;
+                        return false;
+                    }
+                    var fr = new FileReader();
+                    fr.readAsDataURL(file);
+                    fr.onload = function () {
+                        $.ajax({
+                            type: "post",
+                            url: "{:url('Brands/add')}",
+                            data: {
+                                brand_logo: this.result,
+                                brand_name: brand_name,
+                                brand_web: brand_web,
+                                brand_des: brand_des,
+                                brand_order: brand_order,
+                                brand_show: brand_show
+                            },
+                            dataType: "json",
+                            success: function (data) {
+                                if (data.status == 1) {
+                                    alert("添加成功");
+                                    window.location.href="{:url('Brands/show')}";
+                                } else {
+                                    alert('添加失败');
+                                }
+                            }
+                        })
+                    }
+                }
+                $("input[name=brand_name]").trigger('blur');
+                $("input[name=brand_web]").trigger('blur');
+                $("input[name=brand_des]").trigger('blur');
+                $("input[name=brand_order]").trigger('blur');
+                return false;
+            })
+        })
+    </script>
+{/block}
+{block name="body"}
+<div id="dcMain">
+    <!-- 当前位置 -->
+    <div id="urHere">DouPHP 管理中心<b>></b><strong>添加品牌</strong> </div>
+    <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+        <h3><a href="{:url('Brands/show')}" class="actionBtn">品牌管理</a>添加品牌</h3>
+        <div id="manager" class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+            <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+                <tr>
+                    <td width="100" align="right">品牌名称</td>
+                    <td>
+                        <input type="text" name="brand_name" size="40" class="inpMain" />
+                    </td>
+                </tr>
+                <tr>
+                    <td width="100" align="right">品牌网址</td>
+                    <td>
+                        <input type="text" name="brand_web" size="40" class="inpMain" />
+                    </td>
+                </tr>
+                <tr>
+                    <td width="100" align="right">品牌简述</td>
+                    <td>
+                        <input type="text" name="brand_des" size="40" class="inpMain" />
+                    </td>
+                </tr>
+                <tr>
+                    <td width="100" align="right">品牌logo</td>
+                    <td>
+                        <input type="file" name="brand_logo" class="inpMain" />
+                    </td>
+                </tr>
+                <tr>
+                    <td width="100" align="right">品牌排序</td>
+                    <td>
+                        <input type="text" name="brand_order" class="inpMain" />
+                    </td>
+                </tr>
+                <tr>
+                    <td width="100" align="right">是否展示品牌</td>
+                    <td>
+                        <input type="radio" name="brand_show" value="1" checked />是
+                        <input type="radio" name="brand_show" value="0" />否
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <input type="button" class="btn" value="提交" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+{/block}

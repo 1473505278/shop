@@ -1,0 +1,78 @@
+{extend name="public:head"}
+{block name="body"}
+    <div id="dcMain">
+        <!-- 当前位置 -->
+        <div id="urHere">DouPHP 管理中心<b>></b><strong>添加分类</strong> </div>
+        <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+            <h3><a href="{:url('Cates/show')}" class="actionBtn">商品分类</a>添加分类</h3>
+            <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+                <tr>
+                    <td width="80" align="right">分类名称</td>
+                    <td>
+                        <input type="text" name="cat_name" value="" size="40" class="inpMain" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">分类排序</td>
+                    <td>
+                        <input type="text" name="unique_id" value="" size="40" class="inpMain" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">上级分类</td>
+                    <td>
+                        <select name="parent_id">
+                            <option value="0">无</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">关键字</td>
+                    <td>
+                        <input type="text" name="keywords" value="" size="40" class="inpMain" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">简单描述</td>
+                    <td>
+                        <textarea name="description" cols="60" rows="4" class="textArea"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">是否展示</td>
+                    <td>
+                        <input type="radio" name="cate_show" value="1">是
+                        <input type="radio" name="cate_show" value="0">否
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">是否导航</td>
+                    <td>
+                        <input type="radio" name="cate_show" value="1">是
+                        <input type="radio" name="cate_show" value="0">否
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">最小价格区间</td>
+                    <td>
+                        <input type="text" name="cate_mincate" class="inpMain" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">最大价格区间</td>
+                    <td>
+                        <input type="text" name="cate_maxcate" class="inpMain" />
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <input type="hidden" name="token" value="b9439ae8" />
+                        <input type="hidden" name="cat_id" value="" />
+                        <input name="submit" class="btn" type="submit" value="提交" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+{/block}

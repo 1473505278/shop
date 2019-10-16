@@ -1,0 +1,86 @@
+{extend name="public:head"}
+{block name="title"}
+    管理中心-添加角色
+{/block}
+{block name="script"}
+    {js href="/layer/layer.js" /}
+    <script>
+        $(document).ready(function(){
+            $(".btn").click(function(){
+                var power_id=[];
+                var role_name=$("input[name=role_name]").val();
+                $("input[type=checkbox]:checked").each(function(i){
+                    power_id[i]=$(this).val();
+                })
+                $.ajax({
+                    type:"post",
+                    url:"{:url('Roles/add')}",
+                    data:{
+                        role_name:role_name,
+                        power_id:power_id
+                    },
+                    dataType:"json",
+                    beforeSend:function(){
+                        layer.load(1);
+                    },
+                    success:function(data) {
+                        layer.closeAll('loading');
+                        if(data.status==1){
+                            alert('添加角色成功');
+                            window.location.href="{:url('Roles/show')}";
+                        }
+                    }
+                })
+            })
+        })
+    </script>
+{/block}
+{block name="body"}
+    <div id="dcMain">
+        <!-- 当前位置 -->
+        <div id="urHere">DouPHP 管理中心<b>></b><strong>添加角色</strong> </div>
+        <div class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+        <h3><a href="{:url('role/show')}" class="actionBtn">角色管理</a>添加角色</h3>
+        <div id="manager" class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+        <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+            <tr>
+                <td width="100" align="right">角色名称</td>
+                <td>
+                    <input type="text" name="role_name" size="40" class="inpMain" />
+                </td>
+            </tr>
+            <tr>
+                <td width="100" align="right">权限</td>
+                <td>
+                    <table>
+                        {foreach $powers as $k=>$v}
+                            {if $v['power_pid']==0}
+                            <tr power_id="{$v['power_id']}">
+                                <th>
+                                    <input type="checkbox" value="{$v['power_id']}">{$v['power_name']}
+                                </th>
+                                <td>
+                                {foreach $powers as $key=>$val}
+                                {if $val['power_pid']==$v['power_id']}
+                                    <input type="checkbox" value="{$val['power_id']}">{$val['power_name']}
+                                {/if}
+                                {/foreach}
+                                </td>
+                            </tr>
+                            {/if}
+                        {/foreach}
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <input type="hidden" name="token" value="5a58b748" />
+                    <input type="button" class="btn" value="提交" />
+                </td>
+            </tr>
+        </table>
+    </div>
+    </div>
+    </div>
+{/block}

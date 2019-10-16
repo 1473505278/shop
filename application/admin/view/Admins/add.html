@@ -1,0 +1,122 @@
+{extend name="public:head"}
+{block name="title"}
+    管理中心 - 网站管理员
+{/block}
+{block name="script"}
+    {js href="/layer/layer.js" /}
+    <script>
+        $(document).ready(function(){
+            var validate={
+                admin_name:false,
+                admin_pwd:false,
+                admin_pwds:false
+            };
+            $("input[name=admin_name]").blur(function(){
+                var name=$(this).val().trim();
+                if(name==''){
+                    layer.tips('请输入账号',$(this));
+                    validate.admin_name=false;
+                }else{
+                    validate.admin_name=true;
+                }
+            });
+            $("input[name=admin_pwd]").blur(function(){
+                var pwd=$(this).val().trim();
+                if(pwd==''){
+                    layer.tips('请输入密码',$(this));
+                    validate.admin_pwd=false;
+                }else{
+                    validate.admin_pwd=true;
+                }
+            });
+            $("input[name=admin_pwds]").blur(function(){
+                var pwd=$("input[name=admin_pwd]").val().trim();
+                var pwds=$(this).val().trim();
+                if(pwd=="" || pwds!==pwd){
+                    layer.tips('密码不一致',$(this));
+                    validate.admin_pwds=false;
+                }else{
+                    validate.admin_pwds=true;
+                }
+            });
+            $(".btn").click(function(){
+                if(validate.admin_name && validate.admin_pwd && validate.admin_pwds){
+                    var admin_name=$("input[name=admin_name]").val();
+                    var admin_pwd=$("input[name=admin_pwd]").val();
+                    var admin_role=$("select[name=role]").val();
+                    $.ajax({
+                        type:"post",
+                        url:"{:url('Admins/add')}",
+                        data:{
+                            admin_name:admin_name,
+                            admin_pwd:admin_pwd,
+                            admin_role:admin_role
+                        },
+                        dataType:"json",
+                        beforeSend:function(){
+                            layer.load(1);
+                        },
+                        success:function(data){
+                            layer.closeAll('loading');
+                            if(data.status==1){
+                                alert("添加成功");
+                                window.location.href="{:url('Admins/show')}";
+                            }
+                        }
+                    })
+                }
+                $("input[name=admin_name]").trigger('blur');
+                $("input[name=admin_pwd]").trigger('blur');
+                $("input[name=admin_pwds]").trigger('blur');
+                return false;
+            });
+        })
+    </script>
+{/block}
+{block name="body"}
+    <div id="dcMain">
+        <!-- 当前位置 -->
+        <div id="urHere">DouPHP 管理中心<b>></b><strong>添加管理员</strong> </div>
+        <div id="manager" class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+            <h3><a href="{:url('Admins/show')}" class="actionBtn">网站管理员</a>添加管理员</h3>
+        <div id="manager" class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+            <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+                <tr>
+                    <td width="100" align="right">管理员名称</td>
+                    <td>
+                        <input type="text" name="admin_name" size="40" class="inpMain" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">密码</td>
+                    <td>
+                        <input type="password" name="admin_pwd" size="40" class="inpMain" />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">确认密码</td>
+                    <td>
+                        <input type="password" name="admin_pwds" size="40" class="inpMain" />
+                    </td>
+                </tr>
+                <tr>
+                    <td width="100" align="right">角色</td>
+                    <td>
+                        <select name="role">
+                            <option value="0">无</option>
+                            {foreach $role as $k=>$v}
+                            <option name="role" value="{$v['role_id']}">{$v['role_name']}</option>
+                            {/foreach}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <input type="button" class="btn" value="提交" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+{/block}

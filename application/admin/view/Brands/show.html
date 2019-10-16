@@ -1,0 +1,33 @@
+{extend name="public:head"}
+{block name="title"}
+管理中心 - 品牌管理
+{/block}
+{block name="body"}
+<div id="dcMain">
+    <!-- 当前位置 -->
+    <div id="urHere">DouPHP 管理中心<b>></b><strong>品牌管理</strong> </div>
+    <div id="manager" class="mainBox" style="height:auto!important;height:550px;min-height:550px;">
+        <h3><a href="{:url('Brands/add')}" class="actionBtn">添加品牌</a>品牌管理</h3>
+        <table width="100%" border="0" cellpadding="8" cellspacing="0" class="tableBasic">
+            <tr>
+                <th width="30" align="center">编号</th>
+                <th align="left">品牌名称</th>
+                <th align="center">品牌logo</th>
+                <th align="center">品牌描述</th>
+                <th align="center">是否显示</th>
+                <th align="center">操作</th>
+            </tr>
+            {foreach $brand as $k=>$v}
+            <tr>
+                <td align="center">{$v['brand_id']}</td>
+                <td>{$v['brand_name']}</td>
+                <td align="center"><img src="{$v['brand_logo']}"></td>
+                <td align="center">{$v['brand_des']}</td>
+                <td align="center">{if $v['brand_show']==1}是{else}否{/if}</td>
+                <td align="center"><a href="{:url('Brands/update')}">编辑</a> | <a href="{:url('Brands/del')}">删除</a></td>
+            </tr>
+            {/foreach}
+        </table>
+    </div>
+</div>
+{/block}
